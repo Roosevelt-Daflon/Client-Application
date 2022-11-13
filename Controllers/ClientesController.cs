@@ -59,11 +59,11 @@ namespace Client_Application.Controllers
 				return RedirectToAction(nameof(Index));
 
 			//padronização de formatação do cep
-			if (clienteDTO.Cep[5] == '-')
-				clienteDTO.Cep.Insert(5, "-");
+			if (clienteDTO.Cep[5] != '-')
+				clienteDTO.Cep = clienteDTO.Cep.Insert(5, "-");
 
 			var cliente = new Cliente();
-			var endereco = await _cepService.SearchCep(clienteDTO.Cep);
+			var endereco = await _repository.GetBy<Endereco>(e => e.Cep == clienteDTO.Cep) ?? await _cepService.SearchCep(clienteDTO.Cep);
 
 			//Verifica se o endereco existe
 			if (endereco == null) 
@@ -93,6 +93,14 @@ namespace Client_Application.Controllers
         public async Task<IActionResult> Edit(int id, [Bind(include:"Nome, Endereco")] Cliente cliente)
         {
 			cliente.Id = id;
+			if (cliente.Endereco.Cep?[5] != '-')
+				cliente.Endereco.Cep = cliente.Endereco.Cep?.Insert(5, "-");
+			if (cliente.Endereco.Cep != null)
+			{
+				var newEndereco = await _cepService.SearchCep(cliente.Endereco.Cep);
+				cliente.Endereco = newEndereco??cliente.Endereco;
+			}
+				
 
 			await _repository.Update(cliente);
 
