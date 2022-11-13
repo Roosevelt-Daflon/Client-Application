@@ -4,6 +4,6 @@ namespace Client_Application.Service
 {
 	public interface ICepService
 	{
-		public Task<Endereco> SearchCep(string Cep);
+		public Task<Endereco?> SearchCep(string Cep);
 	}
 }

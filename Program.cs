@@ -9,7 +9,6 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
 
-builder.Services.AddRazorPages();
 builder.Services.AddScoped<IRepository, EntityFrameWorkRepository>();
 builder.Services.AddSingleton<ICepService, ViaCepService>();
 builder.Services.AddDbContext<DataContext>();

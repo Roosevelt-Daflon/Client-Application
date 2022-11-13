@@ -17,6 +17,7 @@ namespace Client_Application.Controllers
     {
 		private readonly IRepository _repository;
 		private readonly ICepService _cepService;
+
 		public ClientesController(IRepository repository, ICepService cepService)
         {
 			_repository = repository;
@@ -32,12 +33,10 @@ namespace Client_Application.Controllers
         // GET: Clientes/Details/5
         public async Task<IActionResult> Details(int id)
         {
-
 			var cliente = await _repository.GetBy<Cliente>(c => c.Id == id, e => e.Endereco);
+			
 			if (cliente == null)
-            {
                 return NotFound();
-            }
 
             return View(cliente);
         }
@@ -46,26 +45,28 @@ namespace Client_Application.Controllers
 		[Route("/Create")]
         public IActionResult Create()
         {
-			ViewData["Title"] = "Create";
-
 			return View();
         }
 
         // POST: Clientes/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
 		[Route("Create")]
         public async Task<IActionResult> Create([Bind("Nome, Cep")] ClienteDTO clienteDTO)
         {
-			if(clienteDTO.Nome == null|| clienteDTO.Cep == null)
+			//Verifica se o Cliente DTO é valido
+			if(clienteDTO.Nome == null || clienteDTO.Cep == null)
 				return RedirectToAction(nameof(Index));
+
+			//padronização de formatação do cep
+			if (clienteDTO.Cep[5] == '-')
+				clienteDTO.Cep.Insert(5, "-");
 
 			var cliente = new Cliente();
 			var endereco = await _cepService.SearchCep(clienteDTO.Cep);
 
-			if(endereco == null)
+			//Verifica se o endereco existe
+			if (endereco == null) 
 				return RedirectToAction(nameof(Index));
 
 			cliente.Nome = clienteDTO.Nome;
@@ -79,21 +80,21 @@ namespace Client_Application.Controllers
         public async Task<IActionResult> Edit(int id)
         {
 			var cliente = await _repository.GetBy<Cliente>(c => c.Id == id, e => e.Endereco);
-            if (cliente == null)
-            {
+            
+			if (cliente == null)
                 return NotFound();
-            }
+
             return View(cliente);
         }
 
         // POST: Clientes/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind(include:"Nome, Endereco")] Cliente cliente)
         {
-			await _repository.Update(id, cliente);
+			cliente.Id = id;
+
+			await _repository.Update(cliente);
 
 			return RedirectToAction(nameof(Index));
 		}
@@ -101,12 +102,10 @@ namespace Client_Application.Controllers
         // GET: Clientes/Delete/5
         public async Task<IActionResult> Delete(int id)
         {
-
 			var cliente = await _repository.GetBy<Cliente>(c => c.Id == id, e => e.Endereco);
+			
 			if (cliente == null)
-            {
                 return NotFound();
-            }
 
             return View(cliente);
         }
