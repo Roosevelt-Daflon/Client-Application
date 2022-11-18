@@ -98,7 +98,9 @@ namespace Client_Application.Controllers
 			if (cliente.Endereco.Cep != null)
 			{
 				var newEndereco = await _cepService.SearchCep(cliente.Endereco.Cep);
-				cliente.Endereco = newEndereco??cliente.Endereco;
+				if(newEndereco == null)
+					return RedirectToAction(nameof(Index));
+				cliente.Endereco = newEndereco;
 			}
 				
 

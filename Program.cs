@@ -10,7 +10,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddScoped<IRepository, EntityFrameWorkRepository>();
-builder.Services.AddSingleton<ICepService, ViaCepService>();
+builder.Services.AddScoped<ICepService, ViaCepService>();
 builder.Services.AddDbContext<DataContext>();
 
 var app = builder.Build();
