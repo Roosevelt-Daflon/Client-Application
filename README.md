@@ -1,5 +1,12 @@
-<h1 align="center">Descrição do projeto</h1>
-<h4 align="center">Uma aplicação CRUD em ASP.NET e com consumindo da api <a href="https://viacep.com.br/">ViaCEP</a> </h4>
-<h4>____________________________________________________________________________________________</h4>
-<h3 >Como rodar o projeto:</h3>
-Para rodar o projeto basta abrir um terminal na pasta do mesmo e executar o comando <code>dotnet run</code>. Apos fazer isso, basta acessar o endereço <code>http://localhost:5051/</code> no navagador.
+# 📦 Aplicação CRUD com Integração ViaCEP
+
+Este projeto é uma aplicação **CRUD** desenvolvida em **ASP.NET**, que realiza o consumo da API externa [ViaCEP](https://viacep.com.br/) para consulta e preenchimento automático de endereços.
+
+---
+
+### 🚀 Como rodar o projeto
+
+1. Abra um terminal na pasta raiz do projeto.
+2. Execute o comando:
+   ```bash
+   dotnet run
